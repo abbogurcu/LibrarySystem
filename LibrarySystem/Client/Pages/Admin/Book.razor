@@ -1,0 +1,98 @@
+﻿@page "/Admin/Book"
+@using LibrarySystem.Shared
+
+<div class="row justify-content-center">
+    <div class="col-xl-4 my-5 py-2 mx-2" style="box-shadow: 0 2px 4px 0 rgba(0,0,0,.4); background-color: #fff;">
+        <h3>Kitap İşlemleri</h3>
+        <RadzenDropDown Data="@CategoryList"
+                        TextProperty="category" ValueProperty="categoryID"
+                        @bind-Value="@addBookModel.categoryID" />
+        <br />
+        <Radzen.Blazor.RadzenTextBox @bind-Value="addBookModel.item"></Radzen.Blazor.RadzenTextBox>
+        <br />
+        @if (bookInfo != null)
+        {
+            <br />
+            <div class="alert alert-info h6">
+                @bookInfo
+            </div>
+        }
+        <br />
+        <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => OnClickBook())
+                      Text="Kitap Ekle" ButtonStyle="ButtonStyle.Secondary" />
+    </div>
+    <div class="col-xl-7 my-5 py-2 mx-2">
+        @if (BookList == null && CategoryList == null)
+        {
+            <p>Yükleniyor...</p>
+        }
+        else
+        {
+            <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" Data="@BookList" @ref="grid" TItem="Items" LogicalFilterOperator="LogicalFilterOperator.Or">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Items" Property="itemID" Filterable="false" Title="ID" Width="50px" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="Items" Property="item" Title="İsim" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="itemTxt">
+                            <RadzenTextBox Style="width:100%;padding:0 5px;" @bind-Value="itemTxt.item"></RadzenTextBox>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Items" Property="categoryID" Title="Kategori" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="itemDdl">
+                            <RadzenDropDown Data="@CategoryList"
+                                            TextProperty="category" ValueProperty="categoryID"
+                                            @bind-Value="itemDdl.categoryID" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Items" Filterable="false" Sortable="false" Width="150px" TextAlign="TextAlign.Center">
+                        <Template Context="item">
+                            <RadzenButton Click=@(args => updateBook(item.itemID,item.item,item.categoryID,0))
+                                          Text="Düzenle" ButtonStyle="ButtonStyle.Warning"></RadzenButton>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Items" Filterable="false" Sortable="false" Width="100px" TextAlign="TextAlign.Center">
+                        <Template Context="itemBtn">
+                            <RadzenButton Click=@(args => deleteBook(itemBtn))
+                                          Text="Sil" ButtonStyle="ButtonStyle.Danger"></RadzenButton>
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        }
+        <br />
+        <br />
+        @if (BookListKategorisiz == null && CategoryList == null)
+        {
+            <p>Yükleniyor...</p>
+        }
+        else
+        {
+            <h5>Kategorisi Olmayan Kitaplar</h5>
+
+            <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" Data="@BookListKategorisiz" @ref="grid2" TItem="Items" LogicalFilterOperator="LogicalFilterOperator.Or">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Items" Property="itemID" Filterable="false" Title="ID" Width="50px" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="Items" Property="item" Title="Kitap" Filterable="false" Sortable="false" TextAlign="TextAlign.Center"/>
+                    <RadzenDataGridColumn TItem="Items" Property="categoryID" Title="Kategori" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="itemDdl">
+                            <RadzenDropDown Data="@CategoryList"
+                                            TextProperty="category" ValueProperty="categoryID"
+                                            @bind-Value="itemDdl.categoryID" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Items" Filterable="false" Sortable="false" Width="150px" TextAlign="TextAlign.Center">
+                        <Template Context="item">
+                            <RadzenButton Click=@(args => updateBook(item.itemID,item.item,item.categoryID,1))
+                                          Text="Düzenle" ButtonStyle="ButtonStyle.Warning"></RadzenButton>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Items" Filterable="false" Sortable="false" Width="100px" TextAlign="TextAlign.Center">
+                        <Template Context="itemBtn">
+                            <RadzenButton Click=@(args => deleteBook(itemBtn))
+                                          Text="Sil" ButtonStyle="ButtonStyle.Danger"></RadzenButton>
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        }
+    </div>
+</div>

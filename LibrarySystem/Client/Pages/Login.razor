@@ -1,0 +1,20 @@
+﻿@page "/Login"
+@layout AuthLayout
+@using LibrarySystem.Shared
+
+<div class="row justify-content-center">
+    <div class="col-xl-12 py-5">
+        <div class="text-center text-white">
+            <h1 class="my-5">Kütüphane Sistemi</h1>
+
+        </div>
+    </div>
+    <div class="col-xl-4" style="box-shadow: 0 2px 4px 0 rgba(0,0,0,.4); background-color: #fff;height:450px;border-radius:50px;">
+        <h2 class="text-center py-5">Giriş</h2>
+        <RadzenTextBox Style="width:80%;padding:20px;margin:0 auto;display:block;font-size:20px;" @bind-Value="user.username" Placeholder="Kullanıcı Adı"></RadzenTextBox>
+        <div class="my-5">
+            <RadzenTextBox Style="width:80%;padding:20px;margin:0 auto;display:block;font-size:20px;" @bind-Value="user.password" Placeholder="Şifre"></RadzenTextBox>
+        </div>
+        <RadzenButton Style="width:250px;margin:0 auto;display:block;font-size:24px;border-radius:30px;" Text="Giriş" ButtonStyle="ButtonStyle.Warning" Disabled="isDisabled" Click="@(args => OnValid())"></RadzenButton>
+    </div>
+</div>

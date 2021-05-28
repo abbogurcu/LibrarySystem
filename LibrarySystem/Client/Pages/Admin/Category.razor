@@ -1,0 +1,53 @@
+﻿@page "/Admin/Category"
+@using LibrarySystem.Shared 
+
+<div class="row justify-content-center">
+    <div class="col-xl-4 my-5 py-2 mx-2" style="box-shadow: 0 2px 4px 0 rgba(0,0,0,.4); background-color: #fff;">
+        <h3>Kategori İşlemleri</h3>
+        <Radzen.Blazor.RadzenTextBox @bind-Value="addCategoryModel.category"></Radzen.Blazor.RadzenTextBox>
+        <br />
+        @if (categoryInfo != null)
+        {
+            <br />
+            <div class="alert alert-info h6">
+                @categoryInfo
+            </div>
+        }
+        <br />
+        <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => OnClickCategory())
+                      Text="Kategori Ekle" ButtonStyle="ButtonStyle.Secondary" />
+        <br />
+        <br />
+    </div>
+    <div class="col-xl-7 my-5 py-2 mx-2">
+        @if (CategoryList == null)
+        {
+            <p>Yükleniyor...</p>
+        }
+        else
+        {
+            <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" Data="@CategoryList" @ref="@grid" TItem="Categories" LogicalFilterOperator="LogicalFilterOperator.Or">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Categories" Property="categoryID" Filterable="false" Title="ID" Width="50px" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="Categories" Property="category" Title="İsim" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="catName">
+                            <RadzenTextBox Style="width:100%;padding:0 5px;" @bind-Value="catName.category"></RadzenTextBox>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Categories" Filterable="false" Sortable="false" Width="150px" TextAlign="TextAlign.Center">
+                        <Template Context="cat">
+                            <RadzenButton Click=@(args => updateCategory(cat.categoryID,cat.category))
+                                          Text="Düzenle" ButtonStyle="ButtonStyle.Warning"></RadzenButton>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Categories" Filterable="false" Sortable="false" Width="100px" TextAlign="TextAlign.Center">
+                        <Template Context="catBtn">
+                            <RadzenButton Click=@(args => deleteCategory(catBtn))
+                                          Text="Sil" ButtonStyle="ButtonStyle.Danger"></RadzenButton>
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        }
+    </div>
+</div>

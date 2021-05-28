@@ -1,0 +1,38 @@
+﻿@page "/"
+@using LibrarySystem.Shared
+
+<h1>Kitap Alma Geçmişi</h1>
+
+<RadzenDropDown Data="@CategoryList"
+                TextProperty="category" ValueProperty="categoryID"
+                @bind-Value="@selectedCategoryID"
+                Placeholder="@categoryDdlText"
+                Change="@(args => OnChange(args))" />
+<br />
+<RadzenDropDown Data="@BookList"
+                TextProperty="item" ValueProperty="itemID"
+                @bind-Value="@selectedItemID"
+                Placeholder="@itemDdlText" />
+<br />
+<RadzenButton Disabled="@btnStatus" style="margin: 0 1rem 1rem 0" Click=@(args => OnClick())
+              Text="Ödünç Al" ButtonStyle="ButtonStyle.Primary" />
+<br />
+<br />
+@if (ItemList == null)
+{
+    <p>Yükleniyor...</p>
+}
+else
+{
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" Data="@ItemList" TItem="ItemHistories" LogicalFilterOperator="LogicalFilterOperator.Or">
+        <Columns>
+            <RadzenDataGridColumn TItem="ItemHistories" Property="itemHistoryID" Filterable="false" Title="ID" Width="50px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="ItemHistories" Property="name" Title="İsim" />
+            <RadzenDataGridColumn TItem="ItemHistories" Property="surname" Title="Soyisim" />
+            <RadzenDataGridColumn TItem="ItemHistories" Property="itemName" Title="Kitap" />
+            <RadzenDataGridColumn TItem="ItemHistories" Property="categoryName" Title="Kategori" />
+            <RadzenDataGridColumn TItem="ItemHistories" Property="borrowTime" Title="Alma Tarihi" />
+            <RadzenDataGridColumn TItem="ItemHistories" Property="deliverTime" Title="Teslim Tarihi" />
+        </Columns>
+    </RadzenDataGrid>
+}

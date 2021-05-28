@@ -1,0 +1,57 @@
+﻿@page "/randevu"
+@using LibrarySystem.Shared
+
+<h1>Randevu</h1>
+
+<RadzenDatePicker TValue="DateTime" @bind-Value="@selectedDate" Change="@(args => OnChangeCalendar(args))" DateFormat="dd.MM.yyyy" />
+<br />
+<br />
+<RadzenDropDown Data="@HourList"
+                TextProperty="hour" ValueProperty="hourID"
+                @bind-Value="@selectedHourID"
+                Change="@(args => OnChangeHour(args))" />
+<br />
+
+@if (RoomList != null)
+{
+    @foreach (var room in RoomList)
+    {
+        <RadzenButton Disabled="@room.active" style="margin: 0 1rem 1rem 0" Click=@(args => OnClick(room.room,room.roomID))
+                      Text="@room.room" ButtonStyle="ButtonStyle.Primary" />
+        //appointmentla karşılaştırıp yap
+    }
+}
+<br />
+<br />
+@if (selectedRoom != null)
+{
+    <div class="alert alert-info h6" style="max-width:350px;">@selectedRoom seçtiniz!</div>;
+}
+
+
+@if (addedAppoRoom != null)
+{
+    <div class="alert alert-info h6" style="max-width:350px;">@addedAppoRoom için randevunuz verilmiştir.!</div>;
+}
+
+<br />
+<RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => OnClickRandevu())
+              Text="Randevu Al" ButtonStyle="ButtonStyle.Secondary" />
+
+<br />
+@if (AppoList == null)
+{
+    <p>Yükleniyor...</p>
+}
+else
+{
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" Data="@AppoList" TItem="Appointments" LogicalFilterOperator="LogicalFilterOperator.Or">
+        <Columns>
+            <RadzenDataGridColumn TItem="Appointments" Property="AppointmentID" Filterable="false" Title="ID" Width="50px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="Appointments" Property="user" Title="İsim" />
+            <RadzenDataGridColumn TItem="Appointments" Property="room" Title="Oda" />
+            <RadzenDataGridColumn TItem="Appointments" Property="dateString" Title="Tarih" />
+            <RadzenDataGridColumn TItem="Appointments" Property="hour" Title="Saat" />
+        </Columns>
+    </RadzenDataGrid>
+}

@@ -1,0 +1,71 @@
+﻿@page "/Admin/DeliverBook"
+@using LibrarySystem.Shared
+
+<div class="row justify-content-center">
+    <div class="col-md-11 px-5 py-4" style="box-shadow: 0 2px 4px 0 rgba(0,0,0,.4); background-color: #fff;">
+        <h3 class="my-5">Kitap Teslim Alma</h3>
+        <h4 class="my-4">Barcode/QR Kod Tarama Teslim</h4>
+        <div style="display:-webkit-inline-box">
+            <label class="form-control" style="width:100px;border-width:0px;">Kitap No : </label>
+            <input type="text" class="form-control" style="width: 200px;"
+                   @bind-value="BarCode"
+                   placeholder="Tarama Verisi" />
+            <button class="btn btn-primary mx-3"
+                    type="button"
+                    @onclick="(() => ShowScanBarcode = !ShowScanBarcode)">
+                Tara
+            </button>
+        </div>
+
+        @if (BarCode != null)
+        {
+    <div class="my-5">
+        <h4>Barcode/QR Kod Tarama Teslim Eden Bilgileri</h4>
+        <br />
+        <RadzenLabel style="width:300px;border-width:0px;" Text="@NameSurname"></RadzenLabel>
+        <br />
+        <RadzenLabel style="width:300px;border-width:0px;" Text="@BookName"></RadzenLabel>
+    </div>
+        }
+
+
+        @if (ShowScanBarcode)
+        {
+
+            <BarcodeReader ScanResult="((e) => {OnDeliverBarcode(e); ShowScanBarcode = !ShowScanBarcode; })"
+                           ShowScanBarcode="ShowScanBarcode"
+                           Close="(() => { ShowScanBarcode = !ShowScanBarcode;BarCode = null; })"
+                           ScanBtnTitle="Tara"
+                           ResetBtnTitle="Sıfırla"
+                           CloseBtnTitle="Kapat" />
+        }
+        <br />
+        <br />
+        @if (ihList == null)
+        {
+            <p>Yükleniyor...</p>
+        }
+        else
+        {
+            <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" Data="@ihList" @ref="grid" TItem="ItemHistories" LogicalFilterOperator="LogicalFilterOperator.Or">
+                <Columns>
+                    <RadzenDataGridColumn TItem="ItemHistories" Property="itemHistoryID" Filterable="false" Title="ID" Width="50px" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="ItemHistories" Property="name" Title="İsim" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="ItemHistories" Property="surname" Title="Soyisim" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="ItemHistories" Property="itemName" Title="Kitap" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="ItemHistories" Property="categoryName" Title="Kategori" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="ItemHistories" Property="borrowTime" Title="Alma Tarihi" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="ItemHistories" Property="deliverTime" Title="Son Tarih" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="ItemHistories" Property="itemID" Title="Kitap No" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" />
+
+                    <RadzenDataGridColumn TItem="ItemHistories" Filterable="false" Sortable="false" Width="200px" TextAlign="TextAlign.Center">
+                        <Template Context="itemBtn">
+                            <RadzenButton Click=@(args => deliverBook(itemBtn))
+                                          Text="Teslim Al" ButtonStyle="ButtonStyle.Warning"></RadzenButton>
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        }
+    </div>
+</div>
